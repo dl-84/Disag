@@ -5,8 +5,11 @@ on:
     tags:
       - 'v*'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
-  build-windows:
+  Build_Windows:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +30,7 @@ jobs:
           name: windows
           path: ./out/Sektionsliga.exe
 
-  build-macos:
+  Build_Mac:
     runs-on: macos-latest
     strategy:
       matrix:
@@ -88,14 +91,16 @@ jobs:
           </plist>
           PLIST
 
-          cd ./out && zip -r "Sektionsliga-${{ matrix.suffix }}.zip" Sektionsliga.app
+          hdiutil create -volname "Sektionsliga" \
+            -srcfolder "$BUNDLE" -ov -format UDZO \
+            "./out/Sektionsliga-${{ matrix.suffix }}.dmg"
 
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.suffix }}
-          path: ./out/Sektionsliga-${{ matrix.suffix }}.zip
+          path: ./out/Sektionsliga-${{ matrix.suffix }}.dmg
 
-  build-linux:
+  Build_Linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -120,8 +125,10 @@ jobs:
         run: |
           APPDIR=./AppDir
           mkdir -p "$APPDIR/usr/bin"
+          mkdir -p "$APPDIR/usr/share/icons/hicolor/256x256/apps"
           mv ./out/Sektionsliga "$APPDIR/usr/bin/"
           cp Sektionsliga/Assets/Disag/Logo.png "$APPDIR/Sektionsliga.png"
+          cp Sektionsliga/Assets/Disag/Logo.png "$APPDIR/usr/share/icons/hicolor/256x256/apps/Sektionsliga.png"
 
           cat > "$APPDIR/AppRun" << 'APPRUN'
           #!/bin/sh
@@ -146,8 +153,8 @@ jobs:
           name: linux
           path: ./out/Sektionsliga.AppImage
 
-  release:
-    needs: [build-windows, build-macos, build-linux]
+  Create_Release:
+    needs: [Build_Windows, Build_Mac, Build_Linux]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -155,6 +162,13 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: ./artifacts
+
+      - name: Zip artifacts
+        run: |
+          zip -j Sektionsliga-windows.zip      ./artifacts/windows/Sektionsliga.exe
+          zip -j Sektionsliga-macos-x64.zip   ./artifacts/macos-x64/Sektionsliga-macos-x64.dmg
+          zip -j Sektionsliga-macos-arm64.zip ./artifacts/macos-arm64/Sektionsliga-macos-arm64.dmg
+          zip -j Sektionsliga-linux.zip        ./artifacts/linux/Sektionsliga.AppImage
 
       - name: Create release
         env:
@@ -164,7 +178,7 @@ jobs:
           gh release create ${{ github.ref_name }} \
             --title "Sektionsliga ${{ github.ref_name }}" \
             --generate-notes \
-            "./artifacts/windows/Sektionsliga.exe" \
-            "./artifacts/macos-x64/Sektionsliga-macos-x64.zip" \
-            "./artifacts/macos-arm64/Sektionsliga-macos-arm64.zip" \
-            "./artifacts/linux/Sektionsliga.AppImage"
+            "./Sektionsliga-windows.zip" \
+            "./Sektionsliga-macos-x64.zip" \
+            "./Sektionsliga-macos-arm64.zip" \
+            "./Sektionsliga-linux.zip"
