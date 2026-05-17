@@ -21,7 +21,7 @@
 
     <Window.Styles>
         <Style Selector="ListBox.nav">
-            <Setter Property="Background" Value="{DynamicResource NavigationBackgroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="0" />
         </Style>
@@ -29,7 +29,7 @@
             <Setter Property="Padding" Value="17,10,20,10" />
             <Setter Property="BorderThickness" Value="3,0,0,0" />
             <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="Background" Value="{DynamicResource NavigationBackgroundBrush}" />
+            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource TextOnDarkBrush}" />
             <Setter Property="Opacity" Value="0.7" />
             <Setter Property="Cursor" Value="Hand" />
@@ -61,7 +61,7 @@
     <Grid ColumnDefinitions="220,*">
 
         <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{DynamicResource NavigationBackgroundBrush}">
+        <Border Grid.Column="0" Background="{DynamicResource PrimaryBrush}">
             <DockPanel>
 
                 <!-- Logo -->
