@@ -1,10 +1,11 @@
-using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using Sektionsliga.Models;
 using Sektionsliga.Services.Flag;
 using Sektionsliga.Services.Language;
+using Sektionsliga.Services.Localization;
 using Sektionsliga.Services.Settings;
 using Sektionsliga.ViewModels;
 using Sektionsliga.Views;
@@ -22,6 +23,9 @@ public partial class App : Application
     {
         ServiceProvider serviceProvider = InitServiceProvider();
 
+        AppSettingsModel settings = serviceProvider.GetRequiredService<ISettingsService>().Load();
+        serviceProvider.GetRequiredService<ILocalizationService>().SetLanguage(settings.CurrentLanguageCode);
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow
@@ -36,9 +40,7 @@ public partial class App : Application
     private static ServiceProvider InitServiceProvider()
     {
         ServiceCollection services = new ServiceCollection();
-
         InitSingletons(services);
-
         return services.BuildServiceProvider();
     }
 
@@ -46,9 +48,9 @@ public partial class App : Application
     {
         services.AddSingleton<IFlagService, FlagService>();
         services.AddSingleton<ILanguageService, LanguageService>();
+        services.AddSingleton<ILocalizationService, LocalizationService>();
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<MainWindowViewModel>();
-
         return services;
     }
 }

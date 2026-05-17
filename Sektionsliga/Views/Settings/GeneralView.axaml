@@ -10,13 +10,13 @@
                     Spacing="16">
 
             <TextBlock Classes="h3"
-                       Text="Allgemein" />
+                       Text="{Binding Title}" />
 
             <Border Classes="card"
                     CornerRadius="0">
                 <StackPanel Spacing="12">
                     <TextBlock Classes="h4"
-                               Text="Anzeigesprache" />
+                               Text="{Binding DisplayLanguageLabel}" />
                     <ComboBox ItemsSource="{Binding LanguageOptions}"
                               SelectedItem="{Binding SelectedLanguageOption}"
                               Width="240">
