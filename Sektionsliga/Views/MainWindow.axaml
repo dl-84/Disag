@@ -1,26 +1,27 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Sektionsliga.ViewModels"
+﻿<Window x:Class="Sektionsliga.Views.MainWindow"
+        xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        d:DesignWidth="1200"
-        d:DesignHeight="750"
-        x:Class="Sektionsliga.Views.MainWindow"
+        xmlns:vm="using:Sektionsliga.ViewModels"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:DataType="vm:MainWindowViewModel"
+        Height="750"
         Icon="/Assets/Disag/Logo.png"
+        MinHeight="600"
+        MinWidth="900"
         Title="Sektionsliga"
         Width="1200"
-        Height="750"
-        MinWidth="900"
-        MinHeight="600">
+        d:DesignHeight="750"
+        d:DesignWidth="1200"
+        mc:Ignorable="d">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
     <Window.Resources>
-        <ControlTheme x:Key="NavItemTheme" TargetType="ListBoxItem">
+        <ControlTheme x:Key="NavItemTheme"
+                      TargetType="ListBoxItem">
             <Setter Property="Padding" Value="28,12,20,12" />
             <Setter Property="BorderThickness" Value="3,0,0,0" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -36,9 +37,9 @@
                             CornerRadius="0"
                             Padding="28,12,20,12">
                         <TextBlock x:CompileBindings="False"
-                                   Text="{Binding Label}"
                                    FontSize="14"
-                                   Foreground="{DynamicResource TextOnDarkBrush}" />
+                                   Foreground="{DynamicResource TextOnDarkBrush}"
+                                   Text="{Binding Label}" />
                     </Border>
                 </ControlTemplate>
             </Setter>
@@ -57,59 +58,60 @@
 
     <Grid ColumnDefinitions="220,*">
 
-        <!-- Sidebar -->
-        <Border Grid.Column="0" Background="{DynamicResource PrimaryBrush}">
+        <!--  Sidebar  -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource PrimaryBrush}">
             <StackPanel Margin="0,16,0,0">
 
-                <!-- Competition -->
+                <!--  Competition  -->
                 <TextBlock Classes="label"
-                           Text="WETTKAMPF"
+                           Foreground="{DynamicResource TextOnDarkBrush}"
                            Margin="20,16,20,4"
-                           Foreground="{DynamicResource TextOnDarkBrush}"
-                           Opacity="0.4" />
+                           Opacity="0.4"
+                           Text="WETTKAMPF" />
                 <ListBox Background="Transparent"
                          BorderThickness="0"
                          CornerRadius="0"
-                         Padding="0"
+                         ItemContainerTheme="{StaticResource NavItemTheme}"
                          ItemsSource="{Binding CompetitionItems}"
-                         SelectedItem="{Binding SelectedCompetitionItem}"
-                         ItemContainerTheme="{StaticResource NavItemTheme}" />
+                         Padding="0"
+                         SelectedItem="{Binding SelectedCompetitionItem}" />
 
-                <!-- Settings -->
+                <!--  Settings  -->
                 <TextBlock Classes="label"
-                           Text="EINSTELLUNGEN"
-                           Margin="20,28,20,4"
                            Foreground="{DynamicResource TextOnDarkBrush}"
-                           Opacity="0.4" />
+                           Margin="20,28,20,4"
+                           Opacity="0.4"
+                           Text="EINSTELLUNGEN" />
                 <ListBox Background="Transparent"
                          BorderThickness="0"
                          CornerRadius="0"
-                         Padding="0"
+                         ItemContainerTheme="{StaticResource NavItemTheme}"
                          ItemsSource="{Binding SettingsItems}"
-                         SelectedItem="{Binding SelectedSettingsItem}"
-                         ItemContainerTheme="{StaticResource NavItemTheme}" />
+                         Padding="0"
+                         SelectedItem="{Binding SelectedSettingsItem}" />
 
-                <!-- Info -->
+                <!--  Info  -->
                 <TextBlock Classes="label"
-                           Text="INFO"
-                           Margin="20,28,20,4"
                            Foreground="{DynamicResource TextOnDarkBrush}"
-                           Opacity="0.4" />
+                           Margin="20,28,20,4"
+                           Opacity="0.4"
+                           Text="INFO" />
                 <ListBox Background="Transparent"
                          BorderThickness="0"
                          CornerRadius="0"
-                         Padding="0"
+                         ItemContainerTheme="{StaticResource NavItemTheme}"
                          ItemsSource="{Binding InfoItems}"
-                         SelectedItem="{Binding SelectedInfoItem}"
-                         ItemContainerTheme="{StaticResource NavItemTheme}" />
+                         Padding="0"
+                         SelectedItem="{Binding SelectedInfoItem}" />
 
             </StackPanel>
         </Border>
 
-        <!-- Content Area -->
+        <!--  Content Area  -->
         <ContentControl Grid.Column="1"
-                        Content="{Binding CurrentPage}"
-                        Background="{DynamicResource AppBackgroundAltBrush}" />
+                        Background="{DynamicResource AppBackgroundAltBrush}"
+                        Content="{Binding CurrentPage}" />
 
     </Grid>
 </Window>

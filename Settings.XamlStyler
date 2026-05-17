@@ -8,11 +8,12 @@
     "IsEnabled, IsVisible, Visibility",
     "ToolTip"
   ],
+  "AttributesTolerance": 1,
   "AttributeIndentation": 0,
   "AttributeIndentationStyle": 1,
   "EnableAttributeReordering": true,
   "KeepFirstAttributeOnSameLine": true,
-  "MaxAttributeCharactersPerLine": 120,
+  "MaxAttributeCharactersPerLine": 60,
   "MaxAttributesPerLine": 1,
   "NewlineExemptionElements": "RadialGradientBrush, GradientStop, LinearGradientBrush, ScaleTransform, SkewTransform, RotateTransform, TranslateTransform, Trigger, Condition, Setter",
   "NoNewLineMarkupExtensions": "x:Bind, Binding, DynamicResource, StaticResource",
