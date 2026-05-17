@@ -45,15 +45,15 @@
                 </ControlTemplate>
             </Setter>
         </Style>
-        <Style Selector="ListBox.nav ListBoxItem:pointerover /template/ Border">
-            <Setter Property="Background" Value="#12FFFFFF" />
-        </Style>
         <Style Selector="ListBox.nav ListBoxItem:pointerover">
+            <Setter Property="Background" Value="#1AFFFFFF" />
+            <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="Opacity" Value="0.9" />
         </Style>
         <Style Selector="ListBox.nav ListBoxItem:selected">
             <Setter Property="BorderBrush" Value="{DynamicResource AccentCyanBrush}" />
             <Setter Property="Background" Value="#1E019DC6" />
+            <Setter Property="Foreground" Value="{DynamicResource TextOnDarkBrush}" />
             <Setter Property="Opacity" Value="1" />
         </Style>
     </Window.Styles>
