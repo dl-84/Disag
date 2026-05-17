@@ -28,6 +28,7 @@
 
   <Target Name="FormatCode" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="dotnet csharpier format ." WorkingDirectory="$(MSBuildProjectDirectory)\.." />
+    <Exec Command="dotnet xstyler --recursive --directory $(MSBuildProjectDirectory)" WorkingDirectory="$(MSBuildProjectDirectory)\.." />
   </Target>
 
   <ItemGroup>

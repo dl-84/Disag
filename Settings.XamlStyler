@@ -1,0 +1,26 @@
+{
+  "AttributeOrderingRuleGroups": [
+    "x:Class, x:Name, x:Key",
+    "xmlns, xmlns:*",
+    "x:*",
+    "Grid.Row, Grid.Column, Grid.RowSpan, Grid.ColumnSpan",
+    "*",
+    "IsEnabled, IsVisible, Visibility",
+    "ToolTip"
+  ],
+  "AttributeIndentation": 0,
+  "AttributeIndentationStyle": 1,
+  "EnableAttributeReordering": true,
+  "KeepFirstAttributeOnSameLine": true,
+  "MaxAttributeCharactersPerLine": 120,
+  "MaxAttributesPerLine": 1,
+  "NewlineExemptionElements": "RadialGradientBrush, GradientStop, LinearGradientBrush, ScaleTransform, SkewTransform, RotateTransform, TranslateTransform, Trigger, Condition, Setter",
+  "NoNewLineMarkupExtensions": "x:Bind, Binding, DynamicResource, StaticResource",
+  "PutEndingBracketOnNewLine": false,
+  "RemoveDesignTimeReferences": false,
+  "RootElementLineBreakRule": 0,
+  "SeparateByGroups": false,
+  "IndentSize": 4,
+  "UseVisualStudioIndentSize": false,
+  "IndentWithTabs": false
+}
