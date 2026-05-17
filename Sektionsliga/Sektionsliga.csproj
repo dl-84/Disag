@@ -24,11 +24,15 @@
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="..\.csharpierrc.json" />
+    <None Include="..\Settings.XamlStyler" />
   </ItemGroup>
 
   <Target Name="FormatCode" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
     <Exec Command="dotnet csharpier format ." WorkingDirectory="$(MSBuildProjectDirectory)\.." />
-    <Exec Command="dotnet xstyler --recursive --directory $(MSBuildProjectDirectory)" WorkingDirectory="$(MSBuildProjectDirectory)\.." />
+    <Exec
+      Command="dotnet xstyler --recursive --directory $(MSBuildProjectDirectory)"
+      WorkingDirectory="$(MSBuildProjectDirectory)\.."
+    />
   </Target>
 
   <ItemGroup>
@@ -41,5 +45,6 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
   </ItemGroup>
 </Project>

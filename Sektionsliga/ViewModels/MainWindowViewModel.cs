@@ -1,26 +1,20 @@
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Sektionsliga.Services.Settings;
 using Sektionsliga.ViewModels.Competition;
 using Sektionsliga.ViewModels.Info;
 using Sektionsliga.ViewModels.Settings;
 
 namespace Sektionsliga.ViewModels;
 
-public record NavItem(string Label, System.Func<ViewModelBase> CreatePage);
+public record NavItem(string Label, Func<ViewModelBase> CreatePage);
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public List<NavItem> CompetitionItems { get; } = [new("Auswerten", () => new EvaluationViewModel())];
-
-    public List<NavItem> SettingsItems { get; } =
-    [
-        new("Allgemein", () => new GeneralViewModel()),
-        new("Datenbank", () => new DatabaseViewModel()),
-        new("Gruppen", () => new GroupsViewModel()),
-    ];
-
-    public List<NavItem> InfoItems { get; } = [new("Version", () => new VersionViewModel())];
+    public List<NavItem> CompetitionItems { get; }
+    public List<NavItem> SettingsItems { get; }
+    public List<NavItem> InfoItems { get; }
 
     [ObservableProperty]
     public partial ViewModelBase CurrentPage { get; set; }
@@ -34,8 +28,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     public partial NavItem? SelectedInfoItem { get; set; }
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(ISettingsService settingsService)
     {
+        CompetitionItems = [new("Auswerten", () => new EvaluationViewModel())];
+        SettingsItems =
+        [
+            new("Allgemein", () => new GeneralViewModel(settingsService)),
+            new("Datenbank", () => new DatabaseViewModel()),
+            new("Gruppen", () => new GroupsViewModel()),
+        ];
+        InfoItems = [new("Version", () => new VersionViewModel())];
+
         CurrentPage = new EvaluationViewModel();
         SelectedCompetitionItem = CompetitionItems[0];
     }

@@ -5,34 +5,35 @@ using Sektionsliga.Models;
 
 namespace Sektionsliga.Services.Settings;
 
-public static class SettingsService
+public class SettingsService : ISettingsService
 {
     private static readonly string FilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "Sektionsliga",
+        AppDomain.CurrentDomain.FriendlyName,
         "settings.json"
     );
 
     private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions { WriteIndented = true };
 
-    public static AppSettings Load()
+    public AppSettingsDto Load()
     {
         if (!File.Exists(FilePath))
         {
-            return new AppSettings();
+            return new AppSettingsDto();
         }
+
         try
         {
-            string json = File.ReadAllText(FilePath);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            string content = File.ReadAllText(FilePath);
+            return JsonSerializer.Deserialize<AppSettingsDto>(content) ?? new AppSettingsDto();
         }
         catch
         {
-            return new AppSettings();
+            return new AppSettingsDto();
         }
     }
 
-    public static void Save(AppSettings settings)
+    public void Save(AppSettingsDto settings)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
         File.WriteAllText(FilePath, JsonSerializer.Serialize(settings, JsonOptions));

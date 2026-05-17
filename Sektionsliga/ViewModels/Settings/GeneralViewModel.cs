@@ -14,11 +14,13 @@ public partial class GeneralViewModel : ViewModelBase
     [ObservableProperty]
     public partial LanguageOptionDto SelectedLanguageOption { get; set; }
 
+    private readonly ISettingsService _settingsService;
     private bool _initialized;
 
-    public GeneralViewModel()
+    public GeneralViewModel(ISettingsService settingsService)
     {
-        AppSettings settings = SettingsService.Load();
+        _settingsService = settingsService;
+        AppSettingsDto settings = _settingsService.Load();
         SelectedLanguageOption =
             LanguageOptions.FirstOrDefault(o => o.CultureInfo.TwoLetterISOLanguageName == settings.LanguageCultureCode)
             ?? LanguageOptions[0];
@@ -31,6 +33,7 @@ public partial class GeneralViewModel : ViewModelBase
         {
             return;
         }
-        SettingsService.Save(new AppSettings { LanguageCultureCode = value.CultureInfo.TwoLetterISOLanguageName });
+
+        _settingsService.Save(new AppSettingsDto { LanguageCultureCode = value.CultureInfo.TwoLetterISOLanguageName });
     }
 }
