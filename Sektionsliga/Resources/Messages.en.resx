@@ -40,9 +40,6 @@
   </data>
 
   <!-- General Settings -->
-  <data name="GeneralTitle" xml:space="preserve">
-    <value>General</value>
-  </data>
   <data name="DisplayLanguageLabel" xml:space="preserve">
     <value>Display Language</value>
   </data>

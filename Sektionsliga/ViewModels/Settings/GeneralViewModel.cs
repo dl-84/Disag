@@ -10,44 +10,41 @@ namespace Sektionsliga.ViewModels.Settings;
 
 public partial class GeneralViewModel : ViewModelBase
 {
-    private readonly ISettingsService _settingsService;
-    private readonly ILocalizationService _localizationService;
+    private readonly ILocalizationService localizationService;
+
+    private readonly ISettingsService settingsService;
 
     public List<LanguageOptionModel> LanguageOptions { get; }
 
     [ObservableProperty]
     public partial LanguageOptionModel SelectedLanguageOption { get; set; }
 
-    public string Title => _localizationService["GeneralTitle"];
-    public string DisplayLanguageLabel => _localizationService["DisplayLanguageLabel"];
-
     public GeneralViewModel(
-        ISettingsService settingsService,
         ILanguageService languageService,
-        ILocalizationService localizationService
+        ILocalizationService localizationService,
+        ISettingsService settingsService
     )
     {
-        _settingsService = settingsService;
-        _localizationService = localizationService;
-        _localizationService.LanguageChanged += (_, _) => OnPropertyChanged(string.Empty);
+        this.localizationService = localizationService;
+        this.settingsService = settingsService;
 
         LanguageOptions = languageService.GetAvailableLanguages();
 
-        AppSettingsModel settings = _settingsService.Load();
+        AppSettingsModel settings = this.settingsService.Load();
         SelectedLanguageOption = GetLanguage(settings.CurrentLanguageCode);
     }
 
     partial void OnSelectedLanguageOptionChanged(LanguageOptionModel value)
     {
-        _settingsService.Save(
-            new AppSettingsModel { CurrentLanguageCode = value.CultureInfo.TwoLetterISOLanguageName }
-        );
-        _localizationService.SetLanguage(value.CultureInfo.TwoLetterISOLanguageName);
+        settingsService.Save(new AppSettingsModel { CurrentLanguageCode = value.CultureInfo.TwoLetterISOLanguageName });
+
+        localizationService.SetLanguage(value.CultureInfo.TwoLetterISOLanguageName);
     }
 
     private LanguageOptionModel GetLanguage(string cultureCode)
     {
-        return LanguageOptions.FirstOrDefault(o => o.CultureInfo.TwoLetterISOLanguageName == cultureCode)
-            ?? LanguageOptions[0];
+        return LanguageOptions.FirstOrDefault(languageModel =>
+                languageModel.CultureInfo.TwoLetterISOLanguageName == cultureCode
+            ) ?? LanguageOptions[0];
     }
 }

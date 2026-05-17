@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Sektionsliga.Services.Language;
 using Sektionsliga.Services.Localization;
@@ -10,7 +11,25 @@ using Sektionsliga.ViewModels.Settings;
 
 namespace Sektionsliga.ViewModels;
 
-public record NavItem(string Label, Func<ViewModelBase> CreatePage);
+public class NavItem : INotifyPropertyChanged
+{
+    private readonly ILocalizationService _localizationService;
+    private readonly string _labelKey;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public string Label => _localizationService[_labelKey];
+    public Func<ViewModelBase> CreatePage { get; }
+
+    public NavItem(string labelKey, Func<ViewModelBase> createPage, ILocalizationService localizationService)
+    {
+        _labelKey = labelKey;
+        CreatePage = createPage;
+        _localizationService = localizationService;
+        _localizationService.LanguageChanged += (_, _) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Label)));
+    }
+}
 
 public partial class MainWindowViewModel : ViewModelBase
 {
@@ -38,14 +57,18 @@ public partial class MainWindowViewModel : ViewModelBase
         ILocalizationService localizationService
     )
     {
-        CompetitionItems = [new NavItem("Auswerten", () => new EvaluationViewModel())];
+        CompetitionItems = [new NavItem("Evaluate", () => new EvaluationViewModel(), localizationService)];
         SettingsItems =
         [
-            new NavItem("Allgemein", () => new GeneralViewModel(settingsService, languageService, localizationService)),
-            new NavItem("Datenbank", () => new DatabaseViewModel()),
-            new NavItem("Gruppen", () => new GroupsViewModel()),
+            new NavItem(
+                "General",
+                () => new GeneralViewModel(languageService, localizationService, settingsService),
+                localizationService
+            ),
+            new NavItem("Database", () => new DatabaseViewModel(), localizationService),
+            new NavItem("Groups", () => new GroupsViewModel(), localizationService),
         ];
-        InfoItems = [new NavItem("Version", () => new VersionViewModel())];
+        InfoItems = [new NavItem("Version", () => new VersionViewModel(), localizationService)];
 
         CurrentPage = new EvaluationViewModel();
         SelectedCompetitionItem = CompetitionItems[0];

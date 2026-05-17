@@ -6,6 +6,8 @@ namespace Sektionsliga.Services.Localization;
 
 public class LocalizationService : ILocalizationService
 {
+    public static LocalizationService Instance { get; private set; } = null!;
+
     private static readonly ResourceManager ResourceManager = new ResourceManager(
         "Sektionsliga.Resources.Messages",
         typeof(LocalizationService).Assembly
@@ -14,6 +16,11 @@ public class LocalizationService : ILocalizationService
     private CultureInfo currentCulture = CultureInfo.CurrentUICulture;
 
     public event EventHandler? LanguageChanged;
+
+    public LocalizationService()
+    {
+        Instance = this;
+    }
 
     public string this[string key] => ResourceManager.GetString(key, currentCulture) ?? key;
 

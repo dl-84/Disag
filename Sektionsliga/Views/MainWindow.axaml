@@ -1,6 +1,7 @@
-﻿<Window x:Class="Sektionsliga.Views.MainWindow"
+<Window x:Class="Sektionsliga.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:loc="using:Sektionsliga.Extensions"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:Sektionsliga.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,10 +15,6 @@
         d:DesignHeight="750"
         d:DesignWidth="1200"
         mc:Ignorable="d">
-
-    <Design.DataContext>
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
 
     <Window.Resources>
         <ControlTheme x:Key="NavItemTheme"
@@ -68,7 +65,7 @@
                            Foreground="{DynamicResource TextOnDarkBrush}"
                            Margin="20,16,20,4"
                            Opacity="0.4"
-                           Text="WETTKAMPF" />
+                           Text="{loc:Localization Competition}" />
                 <ListBox Background="Transparent"
                          BorderThickness="0"
                          CornerRadius="0"
@@ -82,7 +79,7 @@
                            Foreground="{DynamicResource TextOnDarkBrush}"
                            Margin="20,28,20,4"
                            Opacity="0.4"
-                           Text="EINSTELLUNGEN" />
+                           Text="{loc:Localization Settings}" />
                 <ListBox Background="Transparent"
                          BorderThickness="0"
                          CornerRadius="0"
@@ -96,7 +93,7 @@
                            Foreground="{DynamicResource TextOnDarkBrush}"
                            Margin="20,28,20,4"
                            Opacity="0.4"
-                           Text="INFO" />
+                           Text="{loc:Localization Info}" />
                 <ListBox Background="Transparent"
                          BorderThickness="0"
                          CornerRadius="0"
