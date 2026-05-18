@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Sektionsliga.Models;
 using Sektionsliga.Services.Language;
 using Sektionsliga.Services.Localization;
 using Sektionsliga.Services.Settings;
@@ -8,19 +10,17 @@ using Sektionsliga.ViewModels.Settings;
 
 namespace Sektionsliga.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+internal partial class MainWindowViewModel : ViewModelBase
 {
-    private readonly ISettingsService settingsService;
+    private readonly ILanguageService _languageService;
 
-    private readonly ILanguageService languageService;
+    private readonly ILocalizationService _localizationService;
 
-    private readonly ILocalizationService localizationService;
+    private readonly ISettingsService _settingsService;
 
-    [ObservableProperty]
-    public partial ViewModelBase CurrentPage { get; set; }
+    private SettingsModel? _settings;
 
-    [ObservableProperty]
-    public partial int ActiveIndex { get; set; } = 1;
+    private List<SettingsError>? _settingsErrors;
 
     public MainWindowViewModel(
         ISettingsService settingsService,
@@ -28,11 +28,28 @@ public partial class MainWindowViewModel : ViewModelBase
         ILocalizationService localizationService
     )
     {
-        this.settingsService = settingsService;
-        this.languageService = languageService;
-        this.localizationService = localizationService;
+        _settingsService = settingsService;
+        _languageService = languageService;
+        _localizationService = localizationService;
 
         CurrentPage = new EvaluationViewModel();
+    }
+
+    [ObservableProperty]
+    public partial int ActiveIndex { get; set; } = 1;
+
+    [ObservableProperty]
+    public partial ViewModelBase CurrentPage { get; set; }
+
+    public void InitSettings(SettingsModel settings)
+    {
+        _settings = settings;
+    }
+
+    public void RedirectToSettings(List<SettingsError> settingsErrors)
+    {
+        _settingsErrors = settingsErrors;
+        ActiveIndex = 3;
     }
 
     partial void OnActiveIndexChanged(int value)
@@ -40,11 +57,22 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentPage = value switch
         {
             1 => new EvaluationViewModel(),
-            3 => new GeneralViewModel(languageService, localizationService, settingsService),
+            3 => CreateGeneralViewModel(),
             4 => new DatabaseViewModel(),
             5 => new GroupsViewModel(),
             7 => new VersionsViewModel(),
             _ => CurrentPage,
         };
+    }
+
+    private GeneralViewModel CreateGeneralViewModel()
+    {
+        return new GeneralViewModel(
+            _languageService,
+            _localizationService,
+            _settingsService,
+            _settings,
+            _settingsErrors
+        );
     }
 }

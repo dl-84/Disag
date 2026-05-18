@@ -10,20 +10,24 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <DebugType>embedded</DebugType>
     <Version>1.0.0</Version>
+    <NoWarn>SA0001;SA1309;SA1101;SA1200;SA1633;SA1000;SA1009;SA1010;SA1111;SA1502;SA1313;SA1303;SA1311</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
+    <EmbeddedResource Include="Resources\JsonSchemas\Settings.schema.json" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Library\Avalonia\Themes\Disag\Disag.csproj" />
+    <ProjectReference Include="..\..\Library\C#\Result\Result.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\README.md" />
     <None Include="..\.csharpierrc.json" />
     <None Include="..\Settings.XamlStyler" />
+    <AdditionalFiles Include=".config\stylecop.json" />
   </ItemGroup>
 
   <Target Name="FormatCode" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
@@ -44,6 +48,11 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
+    <PackageReference Include="JsonSchema.Net" Version="9.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@ using Sektionsliga.Models;
 
 namespace Sektionsliga.Services.Language;
 
-public interface ILanguageService
+internal interface ILanguageService
 {
     List<LanguageOptionModel> GetAvailableLanguages();
 }

@@ -1,41 +1,131 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
+using Json.Schema;
+using Result;
 using Sektionsliga.Models;
 
 namespace Sektionsliga.Services.Settings;
 
-public class SettingsService : ISettingsService
+internal class SettingsService : ISettingsService
 {
-    private static readonly string FilePath = Path.Combine(
+    private const string fileName = "settings.json";
+
+    private static readonly string _directoryPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        AppDomain.CurrentDomain.FriendlyName,
-        "appsettings.json"
+        AppDomain.CurrentDomain.FriendlyName
     );
 
-    private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions { WriteIndented = true };
+    private static readonly string _filePath = Path.Combine(_directoryPath, fileName);
 
-    public AppSettingsModel Load()
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
+
+    public string FolderPath => _directoryPath;
+
+    public void Delete()
     {
-        if (!File.Exists(FilePath))
+        Directory.Delete(_directoryPath, true);
+    }
+
+    public Result<SettingsModel, List<SettingsError>> Load()
+    {
+        if (!File.Exists(_filePath))
         {
-            return new AppSettingsModel();
+            SettingsModel settings = new();
+            Save(settings);
+            return settings;
         }
 
+        return ReadContent().AndThen(Validate);
+    }
+
+    public void Save(SettingsModel? settings)
+    {
+        if (settings is null)
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(_directoryPath);
+        File.WriteAllText(_filePath, JsonSerializer.Serialize(settings, _jsonSerializerOptions));
+    }
+
+    private static List<SettingsError> CollectErrors(EvaluationResults evaluationResults)
+    {
+        List<SettingsError> result = [];
+
+        foreach (EvaluationResults detail in evaluationResults.Details ?? [])
+        {
+            if (detail.IsValid || detail.Errors == null)
+            {
+                continue;
+            }
+
+            SettingsProperty? property = detail.InstanceLocation.ToSettingsProperty();
+
+            if (property is null)
+            {
+                continue;
+            }
+
+            foreach (KeyValuePair<string, string> error in detail.Errors!)
+            {
+                result.Add(new SettingsError(property.Value, error.Value));
+            }
+        }
+
+        return result;
+    }
+
+    private static JsonSchema LoadSchema()
+    {
+        Assembly assembly = Assembly.GetExecutingAssembly();
+        const string resourceName = "Sektionsliga.Resources.JsonSchemas.Settings.schema.json";
+
+        using StreamReader reader = new StreamReader(assembly.GetManifestResourceStream(resourceName)!);
+
+        return JsonSchema.FromText(reader.ReadToEnd());
+    }
+
+    private static Result<SettingsModel, List<SettingsError>> Validate(string content)
+    {
         try
         {
-            string content = File.ReadAllText(FilePath);
-            return JsonSerializer.Deserialize<AppSettingsModel>(content) ?? new AppSettingsModel();
+            using (JsonDocument document = JsonDocument.Parse(content))
+            {
+                EvaluationOptions options = new() { OutputFormat = OutputFormat.List };
+                EvaluationResults evaluationResults = LoadSchema().Evaluate(document.RootElement, options);
+
+                if (evaluationResults is { IsValid: false })
+                {
+                    return new Error<List<SettingsError>>(CollectErrors(evaluationResults));
+                }
+            }
+
+            SettingsModel result = JsonSerializer.Deserialize<SettingsModel>(content, _jsonSerializerOptions)!;
+            return result;
         }
-        catch
+        catch (JsonException exception)
         {
-            return new AppSettingsModel();
+            return new Error<List<SettingsError>>([
+                new SettingsError(SettingsProperty.JsonExceptionOnValidate, exception.Message),
+            ]);
         }
     }
 
-    public void Save(AppSettingsModel appSettings)
+    private static Result<string, List<SettingsError>> ReadContent()
     {
-        Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
-        File.WriteAllText(FilePath, JsonSerializer.Serialize(appSettings, JsonOptions));
+        try
+        {
+            return File.ReadAllText(_filePath);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return new Error<List<SettingsError>>([
+                new SettingsError(SettingsProperty.ExceptionOnReadContent, exception.Message),
+            ]);
+        }
     }
 }

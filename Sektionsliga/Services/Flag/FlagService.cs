@@ -4,7 +4,7 @@ using Avalonia.Platform;
 
 namespace Sektionsliga.Services.Flag;
 
-public class FlagService : IFlagService
+internal class FlagService : IFlagService
 {
     private const string BasePath = "avares://Sektionsliga/Assets/Flags/";
 

@@ -1,10 +1,16 @@
+using System.Collections.Generic;
+using Result;
 using Sektionsliga.Models;
 
 namespace Sektionsliga.Services.Settings;
 
-public interface ISettingsService
+internal interface ISettingsService
 {
-    AppSettingsModel Load();
+    string FolderPath { get; }
 
-    void Save(AppSettingsModel appSettings);
+    void Delete();
+
+    Result<SettingsModel, List<SettingsError>> Load();
+
+    void Save(SettingsModel? settings);
 }

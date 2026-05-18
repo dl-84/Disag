@@ -3,7 +3,7 @@ using Avalonia.Media.Imaging;
 
 namespace Sektionsliga.Models;
 
-public class LanguageOptionModel(string twoLetterIsoLanguageName, Bitmap flag)
+internal class LanguageOptionModel(string twoLetterIsoLanguageName, Bitmap flag)
 {
     public CultureInfo CultureInfo { get; } = new(twoLetterIsoLanguageName);
 

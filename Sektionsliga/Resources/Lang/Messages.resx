@@ -40,8 +40,17 @@
   </data>
 
   <!-- General Settings -->
+  <data name="SettingsLoadError" xml:space="preserve">
+    <value>Konfigurationsdatei ungültig</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Ordner öffnen</value>
+  </data>
+  <data name="DeleteFile" xml:space="preserve">
+    <value>Datei löschen</value>
   </data>
 
   <!-- Version -->
@@ -54,5 +63,7 @@
   <data name="License" xml:space="preserve">
     <value>Lizenz</value>
   </data>
-
+  <data name="ConfigurationFile" xml:space="preserve">
+    <value>Konfigurationsdatei</value>
+  </data>
 </root>

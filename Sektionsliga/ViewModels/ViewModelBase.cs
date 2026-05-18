@@ -2,4 +2,4 @@
 
 namespace Sektionsliga.ViewModels;
 
-public abstract class ViewModelBase : ObservableObject { }
+internal abstract class ViewModelBase : ObservableObject { }

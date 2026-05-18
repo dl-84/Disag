@@ -40,8 +40,17 @@
   </data>
 
   <!-- General Settings -->
+  <data name="SettingsLoadError" xml:space="preserve">
+    <value>Invalid configuration file</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
+  <data name="DeleteFile" xml:space="preserve">
+    <value>Delete file</value>
   </data>
 
   <!-- Version -->
@@ -54,5 +63,10 @@
   <data name="License" xml:space="preserve">
     <value>License</value>
   </data>
-
+  <data name="SettingsFile" xml:space="preserve">
+    <value>Configuration file</value>
+  </data>
+  <data name="ConfigurationFile" xml:space="preserve">
+    <value>Configuration file</value>
+  </data>
 </root>

@@ -1,3 +1,3 @@
 namespace Sektionsliga.ViewModels.Settings;
 
-public partial class GroupsViewModel : ViewModelBase { }
+internal partial class GroupsViewModel : ViewModelBase { }

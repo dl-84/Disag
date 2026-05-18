@@ -4,29 +4,29 @@ using System.Resources;
 
 namespace Sektionsliga.Services.Localization;
 
-public class LocalizationService : ILocalizationService
+internal class LocalizationService : ILocalizationService
 {
-    public static LocalizationService Instance { get; private set; } = null!;
-
-    private static readonly ResourceManager ResourceManager = new ResourceManager(
-        "Sektionsliga.Resources.Messages",
+    private static readonly ResourceManager _resourceManager = new ResourceManager(
+        "Sektionsliga.Resources.Lang.Messages",
         typeof(LocalizationService).Assembly
     );
 
-    private CultureInfo currentCulture = CultureInfo.CurrentUICulture;
-
-    public event EventHandler? LanguageChanged;
+    private CultureInfo _currentCulture = CultureInfo.CurrentUICulture;
 
     public LocalizationService()
     {
         Instance = this;
     }
 
-    public string this[string key] => ResourceManager.GetString(key, currentCulture) ?? key;
+    public event EventHandler? LanguageChanged;
+
+    public static LocalizationService Instance { get; private set; } = null!;
+
+    public string this[string key] => _resourceManager.GetString(key, _currentCulture) ?? key;
 
     public void SetLanguage(string cultureCode)
     {
-        currentCulture = new CultureInfo(cultureCode);
+        _currentCulture = new CultureInfo(cultureCode);
         LanguageChanged?.Invoke(this, EventArgs.Empty);
     }
 }

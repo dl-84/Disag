@@ -4,7 +4,7 @@ using Sektionsliga.Models;
 
 namespace Sektionsliga.ViewModels.Info;
 
-public partial class VersionsViewModel : ViewModelBase
+internal partial class VersionsViewModel : ViewModelBase
 {
     public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
 

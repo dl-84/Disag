@@ -1,3 +1,3 @@
 namespace Sektionsliga.ViewModels.Competition;
 
-public partial class EvaluationViewModel : ViewModelBase { }
+internal partial class EvaluationViewModel : ViewModelBase { }
