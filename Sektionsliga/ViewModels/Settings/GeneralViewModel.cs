@@ -38,6 +38,19 @@ internal partial class GeneralViewModel : ViewModelBase
         SelectedLanguageOption = GetLanguage(settings?.CurrentLanguageCode ?? "unknown");
     }
 
+    public bool HasCriticalError =>
+        _settingsErrors?.Exists(e =>
+            e.Property is SettingsProperty.ExceptionOnReadContent or SettingsProperty.JsonExceptionOnValidate
+        ) ?? false;
+
+    public IEnumerable<string> CriticalErrorMessages =>
+        _settingsErrors
+            ?.Where(e =>
+                e.Property is SettingsProperty.ExceptionOnReadContent or SettingsProperty.JsonExceptionOnValidate
+            )
+            .Select(e => e.Message)
+        ?? [];
+
     public bool HasValidationErrors => _settingsErrors is not null && _settingsErrors.Count > 0;
 
     public List<LanguageOptionModel> LanguageOptions { get; }

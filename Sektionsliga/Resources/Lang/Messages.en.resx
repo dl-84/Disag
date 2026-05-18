@@ -40,6 +40,9 @@
   </data>
 
   <!-- General Settings -->
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
   <data name="SettingsLoadError" xml:space="preserve">
     <value>Invalid configuration file</value>
   </data>

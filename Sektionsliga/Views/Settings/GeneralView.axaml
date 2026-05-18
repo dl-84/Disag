@@ -1,4 +1,4 @@
-<UserControl x:Class="Sektionsliga.Views.Settings.GeneralView"
+﻿<UserControl x:Class="Sektionsliga.Views.Settings.GeneralView"
              xmlns="https://github.com/avaloniaui"
              xmlns:loc="using:Sektionsliga.Extensions"
              xmlns:models="using:Sektionsliga.Models"
@@ -13,19 +13,30 @@
             <TextBlock Classes="h3"
                        Text="{loc:Localization General}" />
 
-            <Border Classes="card"
+            <Border Background="#D32F2F"
                     CornerRadius="0"
-                    IsVisible="{Binding HasValidationErrors}">
+                    Padding="24"
+                    IsVisible="{Binding HasCriticalError}">
                 <StackPanel Spacing="8">
-                    <TextBlock Classes="h4"
-                               Text="{loc:Localization SettingsLoadError}" />
-                    <TextBlock Classes="hint-error"
-                               Text="sepp" />
+                    <TextBlock Classes="h4 on-dark"
+                               Text="{loc:Localization Error}" />
+                    <ScrollViewer MaxHeight="240">
+                        <ItemsControl ItemsSource="{Binding CriticalErrorMessages}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Classes="on-dark"
+                                               Text="{Binding}"
+                                               TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </StackPanel>
             </Border>
 
             <Border Classes="card"
-                    CornerRadius="0">
+                    CornerRadius="0"
+                    IsEnabled="{Binding !HasCriticalError}">
                 <StackPanel Spacing="12">
                     <TextBlock Classes="h4"
                                Text="{loc:Localization Language}" />
