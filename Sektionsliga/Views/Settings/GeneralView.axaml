@@ -13,9 +13,7 @@
             <TextBlock Classes="h3"
                        Text="{loc:Localization General}" />
 
-            <Border Background="#D32F2F"
-                    CornerRadius="0"
-                    Padding="24"
+            <Border Classes="card-error"
                     IsVisible="{Binding HasCriticalError}">
                 <StackPanel Spacing="8">
                     <TextBlock Classes="h4 on-dark"
@@ -35,7 +33,6 @@
             </Border>
 
             <Border Classes="card"
-                    CornerRadius="0"
                     IsEnabled="{Binding !HasCriticalError}">
                 <StackPanel Spacing="12">
                     <TextBlock Classes="h4"
@@ -61,8 +58,7 @@
                 </StackPanel>
             </Border>
 
-            <Border Classes="card"
-                    CornerRadius="0">
+            <Border Classes="card">
                 <StackPanel Spacing="12">
                     <TextBlock Classes="h4"
                                Text="{loc:Localization ConfigurationFile}" />
