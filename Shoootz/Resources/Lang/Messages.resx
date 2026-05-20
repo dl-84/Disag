@@ -63,6 +63,12 @@
   </data>
 
   <!-- Version -->
+  <data name="AppName" xml:space="preserve">
+    <value>Shoootz</value>
+  </data>
+  <data name="Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
   <data name="Versions" xml:space="preserve">
     <value>Versions</value>
   </data>
@@ -71,6 +77,12 @@
   </data>
   <data name="License" xml:space="preserve">
     <value>License</value>
+  </data>
+  <data name="Link" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="ConfigurationFile" xml:space="preserve">
     <value>Configuration file</value>
