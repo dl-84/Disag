@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Shoootz.Models;
 using Shoootz.Services.Grafik;
 using Shoootz.Services.Language;
+using Shoootz.Services.License;
 using Shoootz.Services.Localization;
 using Shoootz.Services.Settings;
 using Shoootz.ViewModels;
@@ -69,6 +70,7 @@ public class App : Application
         services.AddSingleton<ILanguageService, LanguageService>();
         services.AddSingleton<ILocalizationService, LocalizationService>();
         services.AddSingleton<ISettingsService, SettingsService>();
+        services.AddSingleton<IThirdPartyLicenseService, ThirdPartyLicenseService>();
         services.AddSingleton<MainWindowViewModel>();
     }
 

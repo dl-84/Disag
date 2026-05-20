@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Shoootz.Models;
 using Shoootz.Services.Grafik;
 using Shoootz.Services.Language;
+using Shoootz.Services.License;
 using Shoootz.Services.Localization;
 using Shoootz.Services.Settings;
 using Shoootz.ViewModels.Competition;
@@ -21,21 +22,25 @@ internal partial class MainWindowViewModel : ViewModelBase
 
     private readonly ISettingsService _settingsService;
 
+    private readonly IThirdPartyLicenseService _thirdPartyLicenseService;
+
     private SettingsModel? _settings;
 
     private List<SettingsError>? _settingsErrors;
 
     public MainWindowViewModel(
         IGrafikService grafikService,
-        ISettingsService settingsService,
         ILanguageService languageService,
-        ILocalizationService localizationService
+        ILocalizationService localizationService,
+        ISettingsService settingsService,
+        IThirdPartyLicenseService thirdPartyLicenseService
     )
     {
         _grafikService = grafikService;
-        _settingsService = settingsService;
         _languageService = languageService;
         _localizationService = localizationService;
+        _settingsService = settingsService;
+        _thirdPartyLicenseService = thirdPartyLicenseService;
 
         CurrentPage = new EvaluationViewModel();
     }
@@ -83,7 +88,7 @@ internal partial class MainWindowViewModel : ViewModelBase
             3 => CreateGeneralViewModel(),
             4 => new DatabaseViewModel(),
             5 => new GroupsViewModel(),
-            7 => new VersionsViewModel(),
+            7 => new VersionsViewModel(_thirdPartyLicenseService),
             _ => CurrentPage,
         };
     }

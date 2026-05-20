@@ -81,6 +81,7 @@
             </Border>
 
             <TextBlock Classes="h4"
+                       Margin="0,16,0,0"
                        Text="{loc:Localization ConfigurationFile}"
                        IsEnabled="{Binding !HasValidationErrors}" />
             <Border Classes="card"

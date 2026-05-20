@@ -1,3 +1,8 @@
 namespace Shoootz.Models;
 
-internal record ThirdPartyPackageModel(string Name, string Version, string License, string PackageUrl);
+internal record ThirdPartyPackageModel(
+    string PackageName,
+    string PackageVersion,
+    string LicenseType,
+    string PackageUrl
+);
