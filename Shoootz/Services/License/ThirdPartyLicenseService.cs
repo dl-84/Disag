@@ -11,6 +11,12 @@ internal class ThirdPartyLicenseService : IThirdPartyLicenseService
 {
     private const string LicensesFileName = "licenses.json";
 
+    private static readonly HashSet<string> _excludedPackages =
+    [
+        "AvaloniaUI.DiagnosticsSupport", // Debug-only, no license in generated JSON
+        "StyleCop.Analyzers", // Build-time analyzer, Apache-2.0, PrivateAssets=all
+    ];
+
     public List<ThirdPartyPackageModel> GetPackages()
     {
         Assembly assembly = Assembly.GetExecutingAssembly();
@@ -27,7 +33,7 @@ internal class ThirdPartyLicenseService : IThirdPartyLicenseService
         List<ThirdPartyPackageModel>? packages = JsonSerializer.Deserialize<List<ThirdPartyPackageModel>>(stream);
 
         return packages
-                ?.Where(package => !string.IsNullOrEmpty(package.LicenseType))
+                ?.Where(package => !_excludedPackages.Contains(package.PackageName))
                 .OrderBy(p => p.PackageName)
                 .ToList()
             ?? [];
