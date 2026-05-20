@@ -1,0 +1,17 @@
+<Solution>
+  <Project Path="Shoootz/Shoootz.csproj" />
+  <Folder Name="/Theme/">
+    <Project Path="../Library/Avalonia/Themes/Disag/Disag.csproj" />
+  </Folder>
+  <Folder Name="/Libraries/">
+    <Project Path="../Library/C#/Result/Result.csproj" />
+  </Folder>
+  <Folder Name="/Items/">
+    <File Path=".gitignore" />
+    <File Path=".csharpierrc.json" />
+    <File Path="dotnet-tools.json" />
+    <File Path="README.md" />
+    <File Path="Settings.XamlStyler" />
+    <File Path=".config/stylecop.json" />
+  </Folder>
+</Solution>

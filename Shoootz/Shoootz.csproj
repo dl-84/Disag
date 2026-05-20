@@ -16,18 +16,12 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <EmbeddedResource Include="Resources\JsonSchemas\Settings.schema.json" />
+    <AdditionalFiles Include="..\.config\stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Library\Avalonia\Themes\Disag\Disag.csproj" />
     <ProjectReference Include="..\..\Library\C#\Result\Result.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\README.md" />
-    <None Include="..\.csharpierrc.json" />
-    <None Include="..\Settings.XamlStyler" />
-    <AdditionalFiles Include=".config\stylecop.json" />
   </ItemGroup>
 
   <Target Name="FormatCode" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
