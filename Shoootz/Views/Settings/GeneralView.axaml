@@ -10,33 +10,30 @@
         <StackPanel Margin="16,32,16,32"
                     Spacing="16">
 
-            <TextBlock Classes="h3"
-                       Text="{loc:Localization General}" />
-
+            <TextBlock Classes="h4"
+                       Text="{loc:Localization Error}"
+                       IsVisible="{Binding HasCriticalError}" />
             <Border Classes="card-error"
                     IsVisible="{Binding HasCriticalError}">
-                <StackPanel Spacing="8">
-                    <TextBlock Classes="h4 on-dark"
-                               Text="{loc:Localization Error}" />
-                    <ScrollViewer MaxHeight="240">
-                        <ItemsControl ItemsSource="{Binding CriticalErrorMessages}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Classes="on-dark"
-                                               Text="{Binding}"
-                                               TextWrapping="Wrap" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </StackPanel>
+                <ScrollViewer MaxHeight="240">
+                    <ItemsControl ItemsSource="{Binding CriticalErrorMessages}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Classes="on-dark"
+                                           Text="{Binding}"
+                                           TextWrapping="Wrap" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
             </Border>
 
+            <TextBlock Classes="h4"
+                       Text="{loc:Localization Language}"
+                       IsEnabled="{Binding !HasCriticalError}" />
             <Border Classes="card"
                     IsEnabled="{Binding !HasCriticalError}">
                 <StackPanel Spacing="12">
-                    <TextBlock Classes="h4"
-                               Text="{loc:Localization Language}" />
                     <StackPanel Orientation="Horizontal"
                                 Spacing="8">
                         <Image Height="24"
@@ -83,11 +80,12 @@
                 </StackPanel>
             </Border>
 
+            <TextBlock Classes="h4"
+                       Text="{loc:Localization ConfigurationFile}"
+                       IsEnabled="{Binding !HasValidationErrors}" />
             <Border Classes="card"
                     IsEnabled="{Binding !HasValidationErrors}">
                 <StackPanel Spacing="12">
-                    <TextBlock Classes="h4"
-                               Text="{loc:Localization ConfigurationFile}" />
                     <StackPanel Orientation="Horizontal"
                                 Spacing="8">
                         <Button Classes="green"
