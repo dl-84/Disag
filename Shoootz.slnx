@@ -6,6 +6,9 @@
   <Folder Name="/Libraries/">
     <Project Path="../Library/C#/Result/Result.csproj" />
   </Folder>
+  <Folder Name="/Controls/">
+    <Project Path="../Library/Avalonia/Controls/TitleBar/TitleBar.csproj" />
+  </Folder>
   <Folder Name="/Items/">
     <File Path=".gitignore" />
     <File Path=".csharpierrc.json" />
