@@ -104,7 +104,7 @@ internal partial class MainWindowViewModel : ViewModelBase
             Index4DatabaseSite => new DatabaseViewModel(),
             Index5GroupsSite => new GroupsViewModel(),
             Index7AboutSite => new AboutViewModel(_licenseService),
-            Index8LicensesSite => new LicensesViewModel(_licenseService),
+            Index8LicensesSite => new LicensesViewModel(_licenseService, _localizationService),
             _ => CurrentPage,
         };
     }

@@ -14,11 +14,8 @@
             <TextBlock Classes="h4"
                        Text="{loc:Localization LicensesTitle}" />
 
-            <controls:LicenseTableControl Items="{Binding Packages}"
-                                          LicenseColumnHeader="{loc:Localization License}"
-                                          LinkColumnHeader="{loc:Localization Link}"
-                                          NameColumnHeader="{loc:Localization Name}"
-                                          VersionColumnHeader="{loc:Localization Version}" />
+            <controls:LicenseTableControl Headers="{Binding ColumnHeaders}"
+                                          Items="{Binding Packages}" />
 
         </StackPanel>
     </ScrollViewer>
