@@ -14,25 +14,16 @@ internal partial class DatabaseViewModel : ViewModelBase
 
     private readonly SettingsModel _settings;
 
-    private readonly List<SettingsError>? _settingsErrors;
-
-    public DatabaseViewModel(
-        SettingsModel settings,
-        List<SettingsError>? settingsErrors,
-        ISettingsService settingsService
-    )
+    public DatabaseViewModel(SettingsModel settings, ISettingsService settingsService)
     {
         _settings = settings;
-        _settingsErrors = settingsErrors;
         _settingsService = settingsService;
 
-        SelectedProvider = settings.DbConnectionModel.ProviderType;
         ConnectionString = settings.DbConnectionModel.ConnectionString;
+        SelectedProvider = settings.DbConnectionModel.ProviderType;
     }
 
     public event Action<SettingsModel>? SettingsSaved;
-
-    public bool HasValidationErrors => _settingsErrors is not null && _settingsErrors.Count > 0;
 
     public IEnumerable<ProviderType> ProviderOptions { get; } = Enum.GetValues<ProviderType>();
 

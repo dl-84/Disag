@@ -43,6 +43,15 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Restore defaults</value>
+  </data>
+  <data name="SaveAndRestart" xml:space="preserve">
+    <value>Save &amp; restart</value>
+  </data>
+  <data name="SettingsFileError" xml:space="preserve">
+    <value>Settings file error</value>
+  </data>
   <data name="SettingsLoadError" xml:space="preserve">
     <value>Invalid configuration file</value>
   </data>

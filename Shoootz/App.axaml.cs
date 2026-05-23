@@ -37,7 +37,7 @@ public class App : Application
         ILocalizationService localizationService = _serviceProvider.GetRequiredService<ILocalizationService>();
 
         SettingsModel? settings = ReadSettings(out List<SettingsError>? settingsErrors);
-        localizationService.SetLanguage(settings?.CurrentLanguageCode ?? "en");
+        localizationService.SetLanguage(settings?.CurrentLanguageCode ?? "de");
 
         if (settings is not null)
         {
@@ -46,7 +46,7 @@ public class App : Application
 
         if (settingsErrors is not null)
         {
-            mainWindowViewModel.RedirectToSettings(settingsErrors);
+            mainWindowViewModel.RedirectToSettingsError(settingsErrors);
         }
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

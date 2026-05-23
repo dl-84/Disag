@@ -15,4 +15,6 @@ internal interface ISettingsService
     string LoadRaw();
 
     void Save(SettingsModel? settings);
+
+    void SaveRaw(string content);
 }

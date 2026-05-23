@@ -61,6 +61,16 @@ internal class SettingsService : ISettingsService
         File.WriteAllText(AppPath.SettingsFile, JsonSerializer.Serialize(settings, _jsonSerializerOptions));
     }
 
+    public void SaveRaw(string content)
+    {
+        if (!Directory.Exists(AppPath.AppDataBase))
+        {
+            Directory.CreateDirectory(AppPath.AppDataBase);
+        }
+
+        File.WriteAllText(AppPath.SettingsFile, content);
+    }
+
     private static List<SettingsError> CollectErrors(ICollection<ValidationError> errors, JsonDocument jsonDocument)
     {
         List<SettingsError> result = [];

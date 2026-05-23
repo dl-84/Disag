@@ -39,7 +39,8 @@
                         <ListBox Classes="nav"
                                  ItemContainerTheme="{DynamicResource NavigationItem}"
                                  Margin="0,16,0,0"
-                                 SelectedIndex="{Binding ActiveIndex}">
+                                 SelectedIndex="{Binding ActiveIndex}"
+                                 IsEnabled="{Binding IsNavbarEnabled}">
 
                             <!--  Competition  -->
                             <ListBoxItem Classes="navigation-header"
@@ -48,7 +49,7 @@
                                            Text="{loc:Localization Competition,
                                                                    ToUpper=True}" />
                             </ListBoxItem>
-                            <ListBoxItem IsEnabled="{Binding !HasSettingsErrors}">
+                            <ListBoxItem>
                                 <TextBlock Text="{loc:Localization Evaluate}" />
                             </ListBoxItem>
 
@@ -62,10 +63,10 @@
                             <ListBoxItem>
                                 <TextBlock Text="{loc:Localization General}" />
                             </ListBoxItem>
-                            <ListBoxItem IsEnabled="{Binding !HasSettingsErrors}">
+                            <ListBoxItem>
                                 <TextBlock Text="{loc:Localization Database}" />
                             </ListBoxItem>
-                            <ListBoxItem IsEnabled="{Binding !HasSettingsErrors}">
+                            <ListBoxItem>
                                 <TextBlock Text="{loc:Localization Groups}" />
                             </ListBoxItem>
 
@@ -76,10 +77,10 @@
                                            Text="{loc:Localization Info,
                                                                    ToUpper=True}" />
                             </ListBoxItem>
-                            <ListBoxItem IsEnabled="{Binding !HasSettingsErrors}">
+                            <ListBoxItem>
                                 <TextBlock Text="{loc:Localization About}" />
                             </ListBoxItem>
-                            <ListBoxItem IsEnabled="{Binding !HasSettingsErrors}">
+                            <ListBoxItem>
                                 <TextBlock Text="{loc:Localization Licenses}" />
                             </ListBoxItem>
 

@@ -43,6 +43,15 @@
   <data name="Error" xml:space="preserve">
     <value>Fehler</value>
   </data>
+  <data name="RestoreDefaults" xml:space="preserve">
+    <value>Standard wiederherstellen</value>
+  </data>
+  <data name="SaveAndRestart" xml:space="preserve">
+    <value>Speichern &amp; Neustart</value>
+  </data>
+  <data name="SettingsFileError" xml:space="preserve">
+    <value>Fehler in der Einstellungsdatei</value>
+  </data>
   <data name="SettingsLoadError" xml:space="preserve">
     <value>Konfigurationsdatei ungültig</value>
   </data>
