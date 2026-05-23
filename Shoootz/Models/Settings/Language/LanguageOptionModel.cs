@@ -1,7 +1,7 @@
 using System.Globalization;
 using Avalonia.Media.Imaging;
 
-namespace Shoootz.Models;
+namespace Shoootz.Models.Settings.Language;
 
 internal class LanguageOptionModel(string twoLetterIsoLanguageName, Bitmap flag)
 {

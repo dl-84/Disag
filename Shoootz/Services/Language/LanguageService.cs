@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Shoootz.Models;
+using Shoootz.Models.Settings.Language;
 using Shoootz.Services.Grafik;
 
 namespace Shoootz.Services.Language;

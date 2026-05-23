@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Shoootz.Models;
+using Shoootz.Models.Settings;
 using Shoootz.Services.Grafik;
 using Shoootz.Services.Language;
 using Shoootz.Services.License;
@@ -92,6 +92,7 @@ internal partial class MainWindowViewModel : ViewModelBase
         );
 
         viewModel.SettingsErrorsChanged += () => OnPropertyChanged(nameof(HasSettingsErrors));
+        viewModel.SettingsSaved += settings => _settings = settings;
 
         return viewModel;
     }

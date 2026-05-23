@@ -5,7 +5,9 @@ using System.Linq;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Shoootz.Models;
+using Shoootz.Models.Settings;
+using Shoootz.Models.Settings.Language;
+using Shoootz.Services.App;
 using Shoootz.Services.Grafik;
 using Shoootz.Services.Language;
 using Shoootz.Services.Localization;
@@ -19,11 +21,11 @@ internal partial class GeneralViewModel : ViewModelBase
 
     private readonly ILocalizationService _localizationService;
 
-    private readonly SettingsModel? _settings;
-
     private readonly List<SettingsError>? _settingsErrors;
 
     private readonly ISettingsService _settingsService;
+
+    private SettingsModel? _settings;
 
     public GeneralViewModel(
         IGrafikService grafikService,
@@ -47,7 +49,11 @@ internal partial class GeneralViewModel : ViewModelBase
             : GetLanguage(settings?.CurrentLanguageCode ?? "en");
     }
 
+    public event Action<string>? SettingsContentRequested;
+
     public event Action? SettingsErrorsChanged;
+
+    public event Action<SettingsModel>? SettingsSaved;
 
     public IEnumerable<string> CriticalErrorMessages
     {
@@ -55,9 +61,9 @@ internal partial class GeneralViewModel : ViewModelBase
         {
             return _settingsErrors
                     ?.Where(settingsError =>
-                        settingsError.Property
-                            is SettingsProperty.ExceptionOnReadContent
-                                or SettingsProperty.JsonExceptionOnValidate
+                        settingsError.PropertyType
+                            is SettingsPropertyType.ExceptionOnReadContent
+                                or SettingsPropertyType.JsonExceptionOnValidate
                     )
                     .Select(settingsError => settingsError.Message)
                 ?? [];
@@ -71,9 +77,9 @@ internal partial class GeneralViewModel : ViewModelBase
         get
         {
             return _settingsErrors?.Exists(settingsError =>
-                    settingsError.Property
-                        is SettingsProperty.ExceptionOnReadContent
-                            or SettingsProperty.JsonExceptionOnValidate
+                    settingsError.PropertyType
+                        is SettingsPropertyType.ExceptionOnReadContent
+                            or SettingsPropertyType.JsonExceptionOnValidate
                 ) ?? false;
         }
     }
@@ -84,7 +90,9 @@ internal partial class GeneralViewModel : ViewModelBase
         {
             return _settingsErrors is not null
                 && _settingsErrors.Count > 0
-                && _settingsErrors.Any(settingsError => settingsError.Property is SettingsProperty.CurrentLanguageCode);
+                && _settingsErrors.Any(settingsError =>
+                    settingsError.PropertyType is SettingsPropertyType.CurrentLanguageCode
+                );
         }
     }
 
@@ -92,7 +100,7 @@ internal partial class GeneralViewModel : ViewModelBase
 
     public string? InvalidLanguageCodeValue =>
         _settingsErrors
-            ?.FirstOrDefault(settingsError => settingsError.Property is SettingsProperty.CurrentLanguageCode)
+            ?.FirstOrDefault(settingsError => settingsError.PropertyType is SettingsPropertyType.CurrentLanguageCode)
             ?.Value;
 
     public List<LanguageOptionModel> LanguageOptions { get; }
@@ -101,9 +109,21 @@ internal partial class GeneralViewModel : ViewModelBase
     public partial LanguageOptionModel? SelectedLanguageOption { get; set; }
 
     [RelayCommand]
-    private void DeleteSettings()
+    private void ShowSettingsContent()
     {
-        _settingsService.Delete();
+        SettingsContentRequested?.Invoke(_settingsService.LoadRaw());
+    }
+
+    [RelayCommand]
+    private void DeleteSettingsFolder()
+    {
+        _settingsService.DeleteSettingsFolder();
+    }
+
+    [RelayCommand]
+    private void DeleteSettingsFile()
+    {
+        _settingsService.DeleteSettingsFile();
     }
 
     private LanguageOptionModel GetLanguage(string cultureCode)
@@ -120,12 +140,13 @@ internal partial class GeneralViewModel : ViewModelBase
             return;
         }
 
-        SettingsModel settingsModel = _settings ?? new SettingsModel();
-        settingsModel.CurrentLanguageCode = value.CultureInfo.TwoLetterISOLanguageName;
-        _settingsService.Save(settingsModel);
+        _settings ??= new SettingsModel();
+        _settings.CurrentLanguageCode = value.CultureInfo.TwoLetterISOLanguageName;
+        _settingsService.Save(_settings);
+        SettingsSaved?.Invoke(_settings);
         _localizationService.SetLanguage(value.CultureInfo.TwoLetterISOLanguageName);
 
-        _settingsErrors?.RemoveAll(e => e.Property is SettingsProperty.CurrentLanguageCode);
+        _settingsErrors?.RemoveAll(e => e.PropertyType is SettingsPropertyType.CurrentLanguageCode);
 
         OnPropertyChanged(nameof(HasCurrentLanguageCodeError));
         OnPropertyChanged(nameof(HasValidationErrors));
@@ -137,6 +158,6 @@ internal partial class GeneralViewModel : ViewModelBase
     [RelayCommand]
     private void OpenSettingsFolder()
     {
-        Process.Start(new ProcessStartInfo { FileName = _settingsService.FolderPath, UseShellExecute = true });
+        Process.Start(new ProcessStartInfo { FileName = AppPath.AppDataBase, UseShellExecute = true });
     }
 }

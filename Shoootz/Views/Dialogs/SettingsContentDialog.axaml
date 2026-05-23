@@ -1,5 +1,6 @@
-<Window x:Class="Shoootz.Views.Dialogs.LicenseDialog"
+<Window x:Class="Shoootz.Views.Dialogs.SettingsContentDialog"
         xmlns="https://github.com/avaloniaui"
+        xmlns:avaloniaEdit="using:AvaloniaEdit"
         xmlns:loc="using:Shoootz.Extensions"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Background="Transparent"
@@ -21,13 +22,17 @@
                 <TextBlock Classes="label"
                            FontSize="16"
                            Foreground="{DynamicResource PrimaryForegroundBrush}"
-                           Text="MIT License" />
+                           Text="{loc:Localization ShowSettings}" />
             </Border>
 
-            <TextBlock x:Name="LicenseTextBlock"
-                       Grid.Row="1"
-                       Margin="24,16,24,0"
-                       TextWrapping="Wrap" />
+            <avaloniaEdit:TextEditor x:Name="JsonEditor"
+                                     Grid.Row="1"
+                                     FontFamily="{DynamicResource FontMono}"
+                                     FontSize="15"
+                                     IsReadOnly="True"
+                                     Margin="0,8,0,0"
+                                     ShowLineNumbers="True"
+                                     WordWrap="False" />
 
             <Button Grid.Row="2"
                     Click="OnCloseClicked"

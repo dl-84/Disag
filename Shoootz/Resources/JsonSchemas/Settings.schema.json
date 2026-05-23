@@ -4,8 +4,21 @@
   "properties": {
     "CurrentLanguageCode": {
       "enum": ["de", "en"]
+    },
+    "Database": {
+      "type": "object",
+      "properties": {
+        "ConnectionString": {
+          "type": "string"
+        },
+        "Provider": {
+          "enum": ["PostgreSql", "Sqlite"]
+        }
+      },
+      "required": ["ConnectionString", "Provider"],
+      "additionalProperties": false
     }
   },
-  "required": ["CurrentLanguageCode"],
+  "required": ["CurrentLanguageCode", "Database"],
   "additionalProperties": false
 }

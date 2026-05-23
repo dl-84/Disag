@@ -6,35 +6,41 @@ using System.Text.Json;
 using NJsonSchema;
 using NJsonSchema.Validation;
 using Result;
-using Shoootz.Models;
+using Shoootz.Models.Settings;
+using Shoootz.Services.App;
 
 namespace Shoootz.Services.Settings;
 
 internal class SettingsService : ISettingsService
 {
-    private const string FileName = "settings.json";
-
-    private static readonly string _directoryPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        AppDomain.CurrentDomain.FriendlyName
-    );
-
-    private static readonly string _filePath = Path.Combine(_directoryPath, FileName);
-
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { WriteIndented = true };
 
     private static readonly JsonSchema _schema = LoadSchema();
 
-    public string FolderPath => _directoryPath;
-
-    public void Delete()
+    public void DeleteSettingsFile()
     {
-        Directory.Delete(_directoryPath, true);
+        if (File.Exists(AppPath.SettingsFile))
+        {
+            File.Delete(AppPath.SettingsFile);
+        }
+    }
+
+    public void DeleteSettingsFolder()
+    {
+        if (Directory.Exists(AppPath.AppDataBase))
+        {
+            Directory.Delete(AppPath.AppDataBase, true);
+        }
+    }
+
+    public string LoadRaw()
+    {
+        return File.Exists(AppPath.SettingsFile) ? File.ReadAllText(AppPath.SettingsFile) : string.Empty;
     }
 
     public Result<SettingsModel, List<SettingsError>> Load()
     {
-        if (!File.Exists(_filePath))
+        if (!File.Exists(AppPath.SettingsFile))
         {
             SettingsModel settings = new();
             Save(settings);
@@ -51,8 +57,8 @@ internal class SettingsService : ISettingsService
             return;
         }
 
-        Directory.CreateDirectory(_directoryPath);
-        File.WriteAllText(_filePath, JsonSerializer.Serialize(settings, _jsonSerializerOptions));
+        Directory.CreateDirectory(AppPath.AppDataBase);
+        File.WriteAllText(AppPath.SettingsFile, JsonSerializer.Serialize(settings, _jsonSerializerOptions));
     }
 
     private static List<SettingsError> CollectErrors(ICollection<ValidationError> errors, JsonDocument jsonDocument)
@@ -89,12 +95,12 @@ internal class SettingsService : ISettingsService
     {
         try
         {
-            return File.ReadAllText(_filePath);
+            return File.ReadAllText(AppPath.SettingsFile);
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             return new Error<List<SettingsError>>([
-                new SettingsError(SettingsProperty.ExceptionOnReadContent, exception.Message),
+                new SettingsError(SettingsPropertyType.ExceptionOnReadContent, exception.Message),
             ]);
         }
     }
@@ -117,7 +123,7 @@ internal class SettingsService : ISettingsService
         catch (JsonException exception)
         {
             return new Error<List<SettingsError>>([
-                new SettingsError(SettingsProperty.JsonExceptionOnValidate, exception.Message),
+                new SettingsError(SettingsPropertyType.JsonExceptionOnValidate, exception.Message),
             ]);
         }
     }

@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
-using Shoootz.Models;
+using Shoootz.Models.Settings;
 using Shoootz.Services.Grafik;
 using Shoootz.Services.Language;
 using Shoootz.Services.License;
