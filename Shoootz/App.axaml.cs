@@ -23,6 +23,8 @@ namespace Shoootz;
 /// <inheritdoc />
 public class App : Application
 {
+    private static readonly SettingsService _settingsService = new SettingsService();
+
     private IServiceProvider? _serviceProvider;
 
     /// <inheritdoc/>
@@ -35,13 +37,12 @@ public class App : Application
     /// <inheritdoc/>
     public override void OnFrameworkInitializationCompleted()
     {
-        DbConnectionModel? dbConnection = ReadDbConnection();
-        _serviceProvider = InitServiceProvider(dbConnection);
+        SettingsModel? settings = ReadSettings(out List<SettingsError>? settingsErrors);
+        _serviceProvider = InitServiceProvider(settings);
 
         MainWindowViewModel mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
         ILocalizationService localizationService = _serviceProvider.GetRequiredService<ILocalizationService>();
 
-        SettingsModel? settings = ReadSettings(out List<SettingsError>? settingsErrors);
         localizationService.SetLanguage(settings?.CurrentLanguageCode ?? "de");
 
         if (settings is not null)
@@ -63,53 +64,53 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static DbConnectionModel? ReadDbConnection()
-    {
-        return new SettingsService()
-            .Load()
-            .Match<DbConnectionModel?>(settings => settings.DbConnectionModel, _ => null);
-    }
-
-    private static ServiceProvider InitServiceProvider(DbConnectionModel? dbConnection)
+    private static ServiceProvider InitServiceProvider(SettingsModel? settings)
     {
         ServiceCollection services = new ServiceCollection();
-        InitSingletons(services, dbConnection);
+        InitSingletons(services);
+
+        if (settings?.DbConnectionModel is not null)
+        {
+            InitContext(services, settings.DbConnectionModel);
+        }
+
         return services.BuildServiceProvider();
     }
 
-    private static void InitSingletons(ServiceCollection services, DbConnectionModel? dbConnection)
+    private static void InitContext(ServiceCollection services, DbConnectionModel dbConnection)
+    {
+        services.AddDbContextFactory<AppDbContext>(options =>
+        {
+            switch (dbConnection.ProviderType)
+            {
+                case ProviderType.PostgreSql:
+                    options.UseNpgsql(dbConnection.ConnectionString);
+                    break;
+
+                case ProviderType.Sqlite:
+                default:
+                    options.UseSqlite(dbConnection.ConnectionString);
+                    break;
+            }
+        });
+
+        services.AddSingleton<IDatabaseService, DatabaseService>();
+    }
+
+    private static void InitSingletons(ServiceCollection services)
     {
         services.AddSingleton<IGrafikService, GrafikService>();
         services.AddSingleton<ILanguageService, LanguageService>();
         services.AddSingleton<ILicenseService, LicenseService>();
         services.AddSingleton<ILocalizationService, LocalizationService>();
-        services.AddSingleton<ISettingsService, SettingsService>();
+        services.AddSingleton<ISettingsService>(_settingsService);
         services.AddSingleton<MainWindowViewModel>();
-
-        if (dbConnection is not null)
-        {
-            services.AddDbContextFactory<AppDbContext>(options =>
-            {
-                switch (dbConnection.ProviderType)
-                {
-                    case ProviderType.PostgreSql:
-                        options.UseNpgsql(dbConnection.ConnectionString);
-                        break;
-                    default:
-                        options.UseSqlite(dbConnection.ConnectionString);
-                        break;
-                }
-            });
-            services.AddSingleton<IDatabaseService, DatabaseService>();
-        }
     }
 
-    private SettingsModel? ReadSettings(out List<SettingsError>? settingsErrors)
+    private static SettingsModel? ReadSettings(out List<SettingsError>? settingsErrors)
     {
-        ISettingsService settingsService = _serviceProvider!.GetRequiredService<ISettingsService>();
-
         List<SettingsError>? errorList = null;
-        SettingsModel? settings = settingsService
+        SettingsModel? settings = _settingsService
             .Load()
             .Match<SettingsModel?>(
                 settings => settings,
