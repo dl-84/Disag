@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shoootz.Data;
 using Shoootz.Models.Settings;
+using Shoootz.Models.Settings.Database;
+using Shoootz.Services.Database;
 using Shoootz.Services.Grafik;
 using Shoootz.Services.Language;
 using Shoootz.Services.License;
@@ -31,7 +35,8 @@ public class App : Application
     /// <inheritdoc/>
     public override void OnFrameworkInitializationCompleted()
     {
-        _serviceProvider = InitServiceProvider();
+        DbConnectionModel? dbConnection = ReadDbConnection();
+        _serviceProvider = InitServiceProvider(dbConnection);
 
         MainWindowViewModel mainWindowViewModel = _serviceProvider.GetRequiredService<MainWindowViewModel>();
         ILocalizationService localizationService = _serviceProvider.GetRequiredService<ILocalizationService>();
@@ -42,6 +47,7 @@ public class App : Application
         if (settings is not null)
         {
             mainWindowViewModel.InitSettings(settings);
+            _serviceProvider.GetRequiredService<IDatabaseService>().InitializeAsync().GetAwaiter().GetResult();
         }
 
         if (settingsErrors is not null)
@@ -57,21 +63,45 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private static ServiceProvider InitServiceProvider()
+    private static DbConnectionModel? ReadDbConnection()
+    {
+        return new SettingsService()
+            .Load()
+            .Match<DbConnectionModel?>(settings => settings.DbConnectionModel, _ => null);
+    }
+
+    private static ServiceProvider InitServiceProvider(DbConnectionModel? dbConnection)
     {
         ServiceCollection services = new ServiceCollection();
-        InitSingletons(services);
+        InitSingletons(services, dbConnection);
         return services.BuildServiceProvider();
     }
 
-    private static void InitSingletons(ServiceCollection services)
+    private static void InitSingletons(ServiceCollection services, DbConnectionModel? dbConnection)
     {
         services.AddSingleton<IGrafikService, GrafikService>();
         services.AddSingleton<ILanguageService, LanguageService>();
+        services.AddSingleton<ILicenseService, LicenseService>();
         services.AddSingleton<ILocalizationService, LocalizationService>();
         services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<ILicenseService, LicenseService>();
         services.AddSingleton<MainWindowViewModel>();
+
+        if (dbConnection is not null)
+        {
+            services.AddDbContextFactory<AppDbContext>(options =>
+            {
+                switch (dbConnection.ProviderType)
+                {
+                    case ProviderType.PostgreSql:
+                        options.UseNpgsql(dbConnection.ConnectionString);
+                        break;
+                    default:
+                        options.UseSqlite(dbConnection.ConnectionString);
+                        break;
+                }
+            });
+            services.AddSingleton<IDatabaseService, DatabaseService>();
+        }
     }
 
     private SettingsModel? ReadSettings(out List<SettingsError>? settingsErrors)
