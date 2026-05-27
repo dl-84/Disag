@@ -136,6 +136,14 @@
     <value>UDP Broadcast</value>
   </data>
 
+  <!-- UDP Settings -->
+  <data name="IpAddress" xml:space="preserve">
+    <value>IP address</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+
   <!-- Database Settings -->
   <data name="ConnectionFailed" xml:space="preserve">
     <value>Connection failed</value>
@@ -154,6 +162,9 @@
   </data>
   <data name="Provider" xml:space="preserve">
     <value>Provider</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
   </data>
   <data name="TestConnection" xml:space="preserve">
     <value>Test connection</value>
