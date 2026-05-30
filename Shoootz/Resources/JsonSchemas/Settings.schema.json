@@ -1,5 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "IpAddress": {
+      "type": "string",
+      "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+    },
+    "PortNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65535
+    }
+  },
   "type": "object",
   "properties": {
     "CurrentLanguageCode": {
@@ -17,8 +28,21 @@
       },
       "required": ["ConnectionString", "Provider"],
       "additionalProperties": false
+    },
+    "UDP": {
+      "type": "object",
+      "properties": {
+        "IpAddress": {
+          "$ref": "#/definitions/IpAddress"
+        },
+        "Port": {
+          "$ref": "#/definitions/PortNumber"
+        }
+      },
+      "required": ["IpAddress", "Port"],
+      "additionalProperties": false
     }
   },
-  "required": ["CurrentLanguageCode", "Database"],
+  "required": ["CurrentLanguageCode", "Database", "UDP"],
   "additionalProperties": false
 }

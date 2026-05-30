@@ -76,10 +76,19 @@
                                 <TextBlock Classes="label"
                                            FontSize="13"
                                            Text="{loc:Localization Port}" />
-                                <TextBox Width="170" />
+                                <TextBox Classes.error="{Binding !IsPortValid}"
+                                         MaxLength="5"
+                                         Text="{Binding Port}"
+                                         Width="170"
+                                         loc:InputFilter.AllowedPattern="[0-9]" />
+                                <TextBlock Classes="hint-error"
+                                           FontSize="12"
+                                           Margin="5,0,0,0"
+                                           Text="{loc:Localization PortRangeHint}"
+                                           IsVisible="{Binding !IsPortValid}" />
                             </StackPanel>
 
-                            <!--  IP-Adresse  -->
+                            <!--  IP-Address + Test  -->
                             <StackPanel Grid.Column="1"
                                         Spacing="2">
                                 <TextBlock Classes="label"
@@ -87,13 +96,27 @@
                                            Text="{loc:Localization IpAddress}" />
                                 <Grid ColumnDefinitions="*,Auto"
                                       ColumnSpacing="8">
-                                    <TextBox Grid.Column="0" />
+                                    <TextBox Grid.Column="0"
+                                             Classes.error="{Binding !IsIpAddressValid}"
+                                             MaxLength="15"
+                                             Text="{Binding IpAddress}"
+                                             loc:InputFilter.AllowedPattern="[0-9.]" />
                                     <Button Grid.Column="1"
-                                            Classes="green xsmall"
-                                            Content="{loc:Localization Test}"
+                                            Classes="green icon"
+                                            ToolTip.HorizontalOffset="0"
                                             ToolTip.Placement="TopEdgeAlignedRight"
-                                            ToolTip.Tip="{loc:Localization TestConnection}" />
+                                            ToolTip.Tip="{loc:Localization TestConnection}"
+                                            ToolTip.VerticalOffset="-2">
+                                        <Image Height="24"
+                                               Source="{Binding HeartPulseIcon}"
+                                               Width="24" />
+                                    </Button>
                                 </Grid>
+                                <TextBlock Classes="hint-error"
+                                           FontSize="12"
+                                           Margin="5,0,0,0"
+                                           Text="{loc:Localization IpAddressInvalid}"
+                                           IsVisible="{Binding !IsIpAddressValid}" />
                             </StackPanel>
 
                         </Grid>

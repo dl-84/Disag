@@ -12,6 +12,6 @@ internal class SettingsModel
     [JsonPropertyName("Database")]
     public DbConnectionModel DbConnectionModel { get; init; } = new();
 
-    [JsonPropertyName("Udp")]
+    [JsonPropertyName("UDP")]
     public UdpConnectionModel UdpConnectionModel { get; init; } = new();
 }

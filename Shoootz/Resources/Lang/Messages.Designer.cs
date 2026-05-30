@@ -266,6 +266,15 @@ namespace Shoootz.Resources.Lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid IP address.
+        /// </summary>
+        internal static string IpAddressInvalid {
+            get {
+                return ResourceManager.GetString("IpAddressInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         internal static string Language {
@@ -343,6 +352,15 @@ namespace Shoootz.Resources.Lang {
         internal static string Port {
             get {
                 return ResourceManager.GetString("Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min: 1, Max: 65535.
+        /// </summary>
+        internal static string PortRangeHint {
+            get {
+                return ResourceManager.GetString("PortRangeHint", resourceCulture);
             }
         }
         

@@ -32,6 +32,8 @@ internal partial class ConnectionViewModel : ViewModelBase
         _settingsService = settingsService;
 
         ConnectionString = settings.DbConnectionModel.ConnectionString;
+        IpAddress = settings.UdpConnectionModel.IpAddress;
+        Port = settings.UdpConnectionModel.Port.ToString();
         SelectedProvider = settings.DbConnectionModel.ProviderType;
         HeartPulseIcon = grafikService.GetIcon(AppIcon.HeartPulse, AppBrush.PrimaryForeground);
     }
@@ -48,6 +50,18 @@ internal partial class ConnectionViewModel : ViewModelBase
     public partial string ConnectionString { get; set; }
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsIpAddressValid))]
+    public partial string IpAddress { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPortValid))]
+    public partial string Port { get; set; }
+
+    public bool IsIpAddressValid => System.Net.IPAddress.TryParse(IpAddress, out _);
+
+    public bool IsPortValid => int.TryParse(Port, out int port) && port is >= 1 and <= 65535;
+
+    [ObservableProperty]
     public partial ProviderType SelectedProvider { get; set; }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
@@ -55,16 +69,28 @@ internal partial class ConnectionViewModel : ViewModelBase
     {
         _settings.DbConnectionModel.ConnectionString = ConnectionString;
         _settings.DbConnectionModel.ProviderType = SelectedProvider;
+        _settings.UdpConnectionModel.IpAddress = IpAddress;
+        _settings.UdpConnectionModel.Port = int.Parse(Port);
         _settingsService.Save(_settings);
         SettingsSaved?.Invoke(_settings);
         SaveCommand.NotifyCanExecuteChanged();
     }
 
     private bool CanSave() =>
-        ConnectionString != _settings.DbConnectionModel.ConnectionString
-        || SelectedProvider != _settings.DbConnectionModel.ProviderType;
+        int.TryParse(Port, out int port)
+        && port is >= 1 and <= 65535
+        && (
+            ConnectionString != _settings.DbConnectionModel.ConnectionString
+            || IpAddress != _settings.UdpConnectionModel.IpAddress
+            || Port != _settings.UdpConnectionModel.Port.ToString()
+            || SelectedProvider != _settings.DbConnectionModel.ProviderType
+        );
 
     partial void OnConnectionStringChanged(string value) => SaveCommand.NotifyCanExecuteChanged();
+
+    partial void OnIpAddressChanged(string value) => SaveCommand.NotifyCanExecuteChanged();
+
+    partial void OnPortChanged(string value) => SaveCommand.NotifyCanExecuteChanged();
 
     partial void OnSelectedProviderChanged(ProviderType value) => SaveCommand.NotifyCanExecuteChanged();
 
